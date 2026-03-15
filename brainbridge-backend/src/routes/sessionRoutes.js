@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const sessionController = require('../controllers/sessionController');
+import * as sessionController from '../controllers/sessionController.js';
 
 router.post('/', sessionController.createSession);
 router.get('/:id', sessionController.getSession);
 router.patch('/:id/status', sessionController.updateSessionStatus);
 
-module.exports = router;
+export default router;

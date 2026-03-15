@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const telemetrySchema = new mongoose.Schema({
   session_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Session', required: true },
@@ -9,4 +9,4 @@ const telemetrySchema = new mongoose.Schema({
   additional_metrics: { type: Map, of: mongoose.Schema.Types.Mixed }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Telemetry', telemetrySchema);
+export default mongoose.model('Telemetry', telemetrySchema);

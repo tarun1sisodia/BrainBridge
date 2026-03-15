@@ -1,8 +1,8 @@
-const { Redis } = require('@upstash/redis');
+import { Redis } from '@upstash/redis';
 
 let redisClient;
 
-const connectRedis = async () => {
+export const connectRedis = async () => {
   redisClient = new Redis({
     url: process.env.UPSTASH_REDIS_REST_URL,
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
@@ -11,6 +11,4 @@ const connectRedis = async () => {
   console.log('Upstash Redis connected (initialized) successfully');
 };
 
-const getRedisClient = () => redisClient;
-
-module.exports = { connectRedis, getRedisClient };
+export const getRedisClient = () => redisClient;

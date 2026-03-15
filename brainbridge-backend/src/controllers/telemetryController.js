@@ -1,11 +1,13 @@
-const Telemetry = require('../models/Telemetry');
+import Telemetry from '../models/Telemetry.js';
+import { successResponse, errorResponse } from '../utils/apiResponse.js';
+import { BadRequestError } from '../utils/customErrors.js';
 
-exports.saveTelemetry = async (req, res) => {
+export const saveTelemetry = async (req, res) => {
   try {
     const { session_id, game, reaction_time, errors, completion_time, additional_metrics } = req.body;
     
     if (!session_id || !game) {
-      return res.status(400).json({ error: 'session_id and game are required' });
+      throw new BadRequestError('session_id and game are required');
     }
 
     const telemetry = await Telemetry.create({
@@ -17,18 +19,18 @@ exports.saveTelemetry = async (req, res) => {
       additional_metrics
     });
 
-    res.status(201).json(telemetry);
+    return successResponse(res, telemetry, 'Telemetry saved successfully', 201);
   } catch (error) {
-    res.status(500).json({ error: 'Error saving telemetry' });
+    return errorResponse(res, error.message || 'Error saving telemetry', error.statusCode || 500);
   }
 };
 
-exports.getSessionTelemetry = async (req, res) => {
+export const getSessionTelemetry = async (req, res) => {
   try {
     const { sessionId } = req.params;
     const telemetry = await Telemetry.find({ session_id: sessionId });
-    res.status(200).json(telemetry);
+    return successResponse(res, telemetry);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching telemetry' });
+    return errorResponse(res, error.message || 'Error fetching telemetry', 500);
   }
 };

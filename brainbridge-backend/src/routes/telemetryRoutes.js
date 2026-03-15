@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const telemetryController = require('../controllers/telemetryController');
+import * as telemetryController from '../controllers/telemetryController.js';
 
 router.post('/', telemetryController.saveTelemetry);
 router.get('/:sessionId', telemetryController.getSessionTelemetry);
 
-module.exports = router;
+export default router;

@@ -1,10 +1,10 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const connectMongo = require('./config/mongo');
-const { connectRedis } = require('./config/redis');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import connectMongo from './config/mongo.js';
+import { connectRedis } from './config/redis.js';
 
 const app = express();
 
@@ -19,9 +19,9 @@ connectMongo();
 connectRedis();
 
 // Routes
-const sessionRoutes = require('./routes/sessionRoutes');
-const telemetryRoutes = require('./routes/telemetryRoutes');
-const predictionRoutes = require('./routes/predictionRoutes');
+import sessionRoutes from './routes/sessionRoutes.js';
+import telemetryRoutes from './routes/telemetryRoutes.js';
+import predictionRoutes from './routes/predictionRoutes.js';
 
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/telemetry', telemetryRoutes);

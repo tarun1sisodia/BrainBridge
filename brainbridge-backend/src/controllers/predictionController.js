@@ -1,25 +1,26 @@
-const axios = require('axios');
-const Result = require('../models/Result');
-const Session = require('../models/Session');
-const Telemetry = require('../models/Telemetry');
+import axios from 'axios';
+import Result from '../models/Result.js';
+import Session from '../models/Session.js';
+import Telemetry from '../models/Telemetry.js';
+import { successResponse, errorResponse } from '../utils/apiResponse.js';
+import { BadRequestError } from '../utils/customErrors.js';
 
-exports.runPrediction = async (req, res) => {
+export const runPrediction = async (req, res) => {
   try {
     const { session_id } = req.body;
     
     if (!session_id) {
-      return res.status(400).json({ error: 'session_id is required' });
+      throw new BadRequestError('session_id is required');
     }
 
     // 1. Fetch telemetry for this session
     const telemetryData = await Telemetry.find({ session_id });
     
     if (!telemetryData || telemetryData.length === 0) {
-      return res.status(400).json({ error: 'No telemetry data found for this session' });
+      throw new BadRequestError('No telemetry data found for this session');
     }
 
     // 2. Aggregate features for ML Service
-    // In a real app, this logic might be more complex
     let totalReactionTime = 0;
     let totalErrors = 0;
     let count = 0;
@@ -31,13 +32,13 @@ exports.runPrediction = async (req, res) => {
     });
 
     const reaction_time_avg = count > 0 ? totalReactionTime / count : 0;
-    const error_rate = count > 0 ? totalErrors / count : 0; // Simplified
+    const error_rate = count > 0 ? totalErrors / count : 0; 
     
     const features = {
       reaction_time_avg,
       error_rate,
-      math_accuracy: 0.8, // placeholder
-      mirror_error_rate: 0.2 // placeholder
+      math_accuracy: 0.8,
+      mirror_error_rate: 0.2 
     };
 
     // 3. Call ML Service
@@ -54,9 +55,9 @@ exports.runPrediction = async (req, res) => {
     // Mark session completed
     await Session.findByIdAndUpdate(session_id, { status: 'completed' });
 
-    res.status(200).json(result);
+    return successResponse(res, result, 'Prediction completed successfully');
   } catch (error) {
     console.error('Prediction Error:', error.message);
-    res.status(500).json({ error: 'Error running prediction' });
+    return errorResponse(res, error.message || 'Error running prediction', error.statusCode || 500);
   }
 };

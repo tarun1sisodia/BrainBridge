@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const predictionController = require('../controllers/predictionController');
+import * as predictionController from '../controllers/predictionController.js';
 
 router.post('/', predictionController.runPrediction);
 
-module.exports = router;
+export default router;

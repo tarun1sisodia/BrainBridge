@@ -1,37 +1,43 @@
-const Session = require('../models/Session');
+import Session from '../models/Session.js';
+import { successResponse, errorResponse } from '../utils/apiResponse.js';
+import { BadRequestError, NotFoundError } from '../utils/customErrors.js';
 
-exports.createSession = async (req, res) => {
+export const createSession = async (req, res) => {
   try {
     const { child_id, language } = req.body;
     if (!child_id) {
-      return res.status(400).json({ error: 'child_id is required' });
+      throw new BadRequestError('child_id is required');
     }
     const session = await Session.create({ child_id, language });
-    res.status(201).json(session);
+    return successResponse(res, session, 'Session created successfully', 201);
   } catch (error) {
-    res.status(500).json({ error: 'Error creating session' });
+    return errorResponse(res, error.message || 'Error creating session', error.statusCode || 500);
   }
 };
 
-exports.getSession = async (req, res) => {
+export const getSession = async (req, res) => {
   try {
     const { id } = req.params;
     const session = await Session.findById(id);
-    if (!session) return res.status(404).json({ error: 'Session not found' });
-    res.status(200).json(session);
+    if (!session) {
+      throw new NotFoundError('Session not found');
+    }
+    return successResponse(res, session);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching session' });
+    return errorResponse(res, error.message || 'Error fetching session', error.statusCode || 500);
   }
 };
 
-exports.updateSessionStatus = async (req, res) => {
+export const updateSessionStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
     const session = await Session.findByIdAndUpdate(id, { status }, { new: true });
-    if (!session) return res.status(404).json({ error: 'Session not found' });
-    res.status(200).json(session);
+    if (!session) {
+      throw new NotFoundError('Session not found');
+    }
+    return successResponse(res, session, 'Session status updated');
   } catch (error) {
-    res.status(500).json({ error: 'Error updating session' });
+    return errorResponse(res, error.message || 'Error updating session', error.statusCode || 500);
   }
 };
