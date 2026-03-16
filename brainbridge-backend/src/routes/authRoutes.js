@@ -1,7 +1,7 @@
 import express from 'express';
-import { signup, login, verifyEmail } from '../controllers/authController.js';
+import { syncUser } from '../controllers/authController.js';
+import { syncSchema } from '../validators/authValidator.js';
 
-import { registerSchema, loginSchema } from '../validators/authValidator.js';
 
 const router = express.Router();
 
@@ -17,9 +17,8 @@ const validate = (schema) => (req, res, next) => {
   next();
 };
 
-router.post('/register', validate(registerSchema), signup);
-router.post('/login', validate(loginSchema), login);
-router.get('/verify/:token', verifyEmail);
+router.post('/sync', validate(syncSchema), syncUser);
 
 
 export default router;
+

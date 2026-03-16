@@ -27,15 +27,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const syncUserWithMongo = async (supabaseUser: SupabaseUser) => {
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/sync`, {
+        supabase_id: supabaseUser.id,
+        email: supabaseUser.email,
+        username: supabaseUser.user_metadata.username || supabaseUser.email?.split('@')[0],
+      });
+      return response.data.data.user;
+    } catch (error) {
+      console.error('Failed to sync user with MongoDB:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        setUser({
-          id: session.user.id,
-          username: session.user.user_metadata.username || session.user.email?.split('@')[0],
-          email: session.user.email!,
+        syncUserWithMongo(session.user).then(mongoUser => {
+          setUser({
+            id: session.user.id,
+            username: mongoUser?.username || session.user.user_metadata.username || session.user.email?.split('@')[0],
+            email: session.user.email!,
+          });
         });
         axios.defaults.headers.common['Authorization'] = `Bearer ${session.access_token}`;
       }
@@ -46,10 +62,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (session?.user) {
-        setUser({
-          id: session.user.id,
-          username: session.user.user_metadata.username || session.user.email?.split('@')[0],
-          email: session.user.email!,
+        syncUserWithMongo(session.user).then(mongoUser => {
+          setUser({
+            id: session.user.id,
+            username: mongoUser?.username || session.user.user_metadata.username || session.user.email?.split('@')[0],
+            email: session.user.email!,
+          });
         });
         axios.defaults.headers.common['Authorization'] = `Bearer ${session.access_token}`;
       } else {
@@ -60,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
 
   const signup = async (userData: any) => {
     try {

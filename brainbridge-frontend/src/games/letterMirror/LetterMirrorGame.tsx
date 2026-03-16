@@ -94,19 +94,19 @@ export default function LetterMirrorGame({ onGameComplete }: LetterMirrorProps) 
         animate={{ x: shake ? [-10, 10, -10, 10, 0] : 0 }}
         className="relative z-10 w-full flex flex-col items-center gap-10"
       >
-        <div className="bg-white/10 backdrop-blur-md rounded-[3rem] p-10 flex flex-col items-center border border-white/20 shadow-xl">
-          <h3 className="text-3xl font-black text-white mb-6 uppercase tracking-tight">
+          <h3 className="text-xl md:text-3xl font-black text-indigo-900 mb-6 uppercase tracking-tight">
             Find the Magic Letter! ✨
           </h3>
           <motion.div 
-            className="text-[10rem] font-black text-white p-12 bg-white/10 rounded-[2.5rem] shadow-inner relative group border border-white/20"
-            animate={{ scale: [1, 1.02, 1] }}
+            className="text-9xl md:text-[15rem] font-black text-indigo-700 p-8 md:p-12 bg-white rounded-[3rem] shadow-2xl relative group border-4 border-indigo-200"
+            animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 4, repeat: Infinity }}
           >
-             <span className="relative z-10">{targetPair.correct}</span>
-             <div className="absolute inset-0 bg-indigo-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full animate-pulse" />
+             <span className="relative z-10 drop-shadow-sm">{targetPair.correct}</span>
+             <div className="absolute inset-0 bg-indigo-100 opacity-20 blur-2xl rounded-full" />
           </motion.div>
-        </div>
+
+
         
         <div className="grid grid-cols-2 gap-8 w-full max-w-xl">
           <AnimatePresence mode="wait">
@@ -119,13 +119,15 @@ export default function LetterMirrorGame({ onGameComplete }: LetterMirrorProps) 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleSelection(option)}
-                className="bg-white/10 backdrop-blur-md border border-white/30 shadow-lg rounded-[2.5rem] h-48 text-[8rem] font-black text-white hover:bg-white/20 transition-all flex items-center justify-center relative group overflow-hidden"
+                className="bg-white border-4 border-indigo-100 shadow-xl rounded-[3rem] h-40 md:h-64 text-7xl md:text-[10rem] font-black text-indigo-900 hover:bg-indigo-50 hover:border-indigo-400 transition-all flex items-center justify-center relative group overflow-hidden"
               >
-                {/* Mirror Reflection Effect */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/20 opacity-30 pointer-events-none" />
-                <span className="relative z-10">{option}</span>
+                {/* Visual Hint for Clickability */}
+                <div className="absolute bottom-0 left-0 w-full h-2 bg-indigo-200 opacity-50" />
+                <span className="relative z-10 drop-shadow-sm">{option}</span>
               </motion.button>
+
             ))}
+
           </AnimatePresence>
         </div>
       </motion.div>

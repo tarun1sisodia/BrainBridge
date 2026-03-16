@@ -11,7 +11,15 @@ export const loginSchema = Joi.object({
   password: Joi.string().required(),
 });
 
+export const syncSchema = Joi.object({
+  supabase_id: Joi.string().required(),
+  email: Joi.string().email().required(),
+  username: Joi.string().allow('', null),
+});
+
 export default {
   registerSchema,
   loginSchema,
+  syncSchema,
 };
+

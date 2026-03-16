@@ -4,8 +4,10 @@
     "subtitle": "Discover your superpowers through fun games",
     "start": "Let's Play!",
     "language_toggle": "English | हिंदी",
-    "games_heading": "Choose Your Challenge!"
+    "games_heading": "Choose Your Challenge!",
+    "welcome": "Welcome to BrainBridge"
   },
+
   "consent": {
     "title": "Parent's Permission",
     "text": "By playing, you allow us to help you understand how you learn best! We keep your data safe and anonymous.",
@@ -19,8 +21,10 @@
     "seconds": "s",
     "pause": "Pause",
     "resume": "Play",
-    "exit": "End Game"
+    "exit": "End Game",
+    "mascot_cheer": "You're doing amazing! Keep exploring!"
   },
+
   "games": {
     "mirror": {
       "title": "Letter Quest",

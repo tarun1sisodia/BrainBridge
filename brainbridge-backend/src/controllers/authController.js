@@ -7,29 +7,16 @@ const catchAsync = (fn) => {
   };
 };
 
-export const signup = catchAsync(async (req, res, next) => {
-  await authService.register(req.body);
-  res.status(201).json({
+export const syncUser = catchAsync(async (req, res, next) => {
+  const user = await authService.syncUser(req.body);
+  res.status(200).json({
     status: 'success',
-    message: 'Registration successful! Please check your email for verification link.',
+    data: { user },
   });
 });
 
-export const verifyEmail = catchAsync(async (req, res, next) => {
-  const user = await authService.verifyEmail(req.params.token);
-  authService.createSendToken(user, 200, res);
-});
-
-
-export const login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
-  const user = await authService.login(email, password);
-  authService.createSendToken(user, 200, res);
-});
-
 export default {
-  signup,
-  login,
-  verifyEmail,
+  syncUser,
 };
+
 

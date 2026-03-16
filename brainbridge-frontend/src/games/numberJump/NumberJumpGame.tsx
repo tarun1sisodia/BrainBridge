@@ -88,21 +88,22 @@ export default function NumberJumpGame({ onGameComplete }: NumberJumpProps) {
         animate={{ x: shake ? [-10, 10, -10, 10, 0] : 0 }}
         className="relative z-10 w-full flex flex-col items-center gap-12"
       >
-        <div className="bg-white/10 backdrop-blur-md p-8 md:p-12 flex flex-col items-center border border-white/20 rounded-[3rem] shadow-xl max-w-2xl w-full">
-          <h3 className="text-3xl font-black text-white mb-8 uppercase tracking-tight text-center">
+        <div className="bg-slate-50 p-6 md:p-10 flex flex-col items-center border border-slate-100 rounded-[3rem] shadow-xl max-w-2xl w-full">
+          <h3 className="text-xl md:text-3xl font-black text-slate-800 mb-8 uppercase tracking-tight text-center">
              Jump across the Magic Islands! 🏝️
           </h3>
-          <div className="flex items-center gap-6 p-8 bg-white/5 rounded-[2rem] border border-white/10">
+          <div className="flex items-center gap-4 md:gap-6 p-6 md:p-8 bg-white rounded-[2rem] border border-slate-100 shadow-inner">
              <div className="flex flex-col items-center">
-                <span className="text-5xl font-black text-white opacity-40">{targetNumber - 2}</span>
-                <span className="text-[10px] font-bold text-white/30 mt-2 uppercase tracking-widest">Start</span>
+                <span className="text-3xl md:text-5xl font-black text-slate-900 opacity-40">{targetNumber - 2}</span>
+                <span className="text-[8px] md:text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Start</span>
              </div>
-             <span className="text-3xl text-white/20">➜</span>
+             <span className="text-xl md:text-3xl text-slate-200">➜</span>
              <div className="flex flex-col items-center">
-                <span className="text-5xl font-black text-white opacity-70">{targetNumber - 1}</span>
-                <span className="text-[10px] font-bold text-white/40 mt-2 uppercase tracking-widest">Next</span>
+                <span className="text-3xl md:text-5xl font-black text-slate-900 opacity-70">{targetNumber - 1}</span>
+                <span className="text-[8px] md:text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Next</span>
              </div>
-             <span className="text-3xl text-white/20">➜</span>
+             <span className="text-xl md:text-3xl text-slate-200">➜</span>
+
              <motion.div 
                className="w-16 h-16 bg-gradient-to-br from-amber-400 to-rose-500 rounded-2xl flex items-center justify-center shadow-lg border border-white/20"
                animate={{ scale: [1, 1.1, 1] }}
@@ -124,13 +125,15 @@ export default function NumberJumpGame({ onGameComplete }: NumberJumpProps) {
                 whileHover={{ y: -10 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleSelection(option)}
-                className="relative group h-40 w-40"
+                className="relative group h-48 w-48 md:h-64 md:w-64"
               >
-                <div className="absolute inset-4 bg-gradient-to-b from-emerald-400 to-indigo-600 border-4 border-white/40 rounded-full flex flex-col items-center justify-center shadow-xl group-hover:from-amber-400 transition-all">
-                   <span className="text-6xl font-black text-white">{option}</span>
+                <div className="absolute inset-2 md:inset-4 bg-gradient-to-b from-sky-400 to-indigo-600 border-8 border-white rounded-full flex flex-col items-center justify-center shadow-2xl group-hover:from-amber-400 group-hover:scale-105 transition-all">
+                   <span className="text-6xl md:text-[8rem] font-black text-white drop-shadow-lg">{option}</span>
                 </div>
-                <div className="absolute -top-2 -right-2 text-4xl">🌴</div>
+                <div className="absolute -top-2 -right-2 md:-top-4 md:-right-4 text-4xl md:text-6xl">🌴</div>
               </motion.button>
+
+
             ))}
           </AnimatePresence>
         </div>

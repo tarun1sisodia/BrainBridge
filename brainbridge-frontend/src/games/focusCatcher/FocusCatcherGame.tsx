@@ -119,11 +119,12 @@ export default function FocusCatcherGame({ onGameComplete }: FocusCatcherProps) 
         ))}
       </div>
 
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 bg-white/5 backdrop-blur-md px-8 py-3 rounded-full border border-white/10">
-        <h3 className="text-white text-xs font-bold tracking-widest uppercase opacity-80">
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 bg-indigo-600 px-6 md:px-8 py-2 md:py-3 rounded-full border-2 border-indigo-400 shadow-xl shadow-indigo-500/20">
+        <h3 className="text-white text-[10px] md:text-xs font-black tracking-widest uppercase">
           Capture the Cosmic Butterflies! 🦋✨
         </h3>
       </div>
+
 
       <AnimatePresence>
         {entities.map((entity) => (
@@ -148,16 +149,17 @@ export default function FocusCatcherGame({ onGameComplete }: FocusCatcherProps) 
                 <motion.div 
                   animate={{ y: [-5, 5, -5] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="text-7xl md:text-8xl drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+                  className="text-6xl sm:text-7xl md:text-8xl drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                 >
                    🦋
                 </motion.div>
               </div>
             ) : (
               <div className="relative cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                 <span className="text-6xl md:text-7xl">🪨</span>
+                 <span className="text-5xl sm:text-6xl md:text-7xl">🪨</span>
               </div>
             )}
+
           </motion.div>
         ))}
       </AnimatePresence>
