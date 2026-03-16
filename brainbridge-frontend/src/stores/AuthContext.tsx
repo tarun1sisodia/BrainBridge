@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
+import { supabase } from '../lib/supabaseClient';
+import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 
 interface User {
   id: string;
@@ -11,7 +13,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
+  session: Session | null;
   loading: boolean;
   signup: (userData: any) => Promise<{ success: boolean; message?: string }>;
   login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
@@ -22,60 +24,87 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
-    }
-    setLoading(false);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          username: session.user.user_metadata.username || session.user.email?.split('@')[0],
+          email: session.user.email!,
+        });
+        axios.defaults.headers.common['Authorization'] = `Bearer ${session.access_token}`;
+      }
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          username: session.user.user_metadata.username || session.user.email?.split('@')[0],
+          email: session.user.email!,
+        });
+        axios.defaults.headers.common['Authorization'] = `Bearer ${session.access_token}`;
+      } else {
+        setUser(null);
+        delete axios.defaults.headers.common['Authorization'];
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const signup = async (userData: any) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, userData);
-      return { success: true, message: response.data.message };
+      const { data, error } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          data: {
+            username: userData.username,
+          },
+        },
+      });
+
+      if (error) throw error;
+      return { success: true, message: 'Check your email for the verification link!' };
     } catch (error: any) {
-      return { success: false, message: error.response?.data?.message || 'Signup failed' };
+      return { success: false, message: error.message || 'Signup failed' };
     }
   };
-
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, { email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      const { token, data } = response.data;
-      setToken(token);
-      setUser(data.user);
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      if (error) throw error;
       return { success: true };
     } catch (error: any) {
-      return { success: false, message: error.response?.data?.message || 'Login failed' };
+      return { success: false, message: error.message || 'Login failed' };
     }
   };
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    delete axios.defaults.headers.common['Authorization'];
+  const logout = async () => {
+    await supabase.auth.signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, signup, login, logout }}>
+    <AuthContext.Provider value={{ user, session, loading, signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

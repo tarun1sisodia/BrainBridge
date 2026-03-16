@@ -13,9 +13,9 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-
   const { signup } = useAuth();
   const router = useRouter();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +25,13 @@ export default function Signup() {
     const result = await signup({ username, email, password });
     if (result.success) {
       setIsRegistered(true);
-      setSuccessMessage(result.message || 'Check your email!');
+      setSuccessMessage(result.message || 'Check your email for the verification link!');
     } else {
       setError(result.message || 'Signup failed');
     }
     setLoading(false);
   };
+
 
 
   return (

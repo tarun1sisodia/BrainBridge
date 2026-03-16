@@ -3,6 +3,7 @@ import { useLanguageStore } from '../stores/languageStore';
 import { useAuth } from '../stores/AuthContext';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import InteractiveMascot from './InteractiveMascot';
 
@@ -14,7 +15,9 @@ interface LandingProps {
 export default function Landing({ onStart }: LandingProps) {
   const { t } = useLanguageStore();
   const { user } = useAuth();
+  const router = useRouter();
   const [isLaunching, setIsLaunching] = useState(false);
+
   const [showWelcome, setShowWelcome] = useState(true);
 
   useEffect(() => {
@@ -137,20 +140,40 @@ export default function Landing({ onStart }: LandingProps) {
           </div>
           
           <div className="flex flex-wrap gap-6 justify-center lg:justify-start">
-            <button 
-              onClick={handleLaunch}
-              disabled={isLaunching}
-              className={`btn-primary text-xl px-16 py-8 shadow-indigo-600/20 active:translate-y-1 transition-all ${isLaunching ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              {isLaunching ? 'LIFT OFF! 🚀' : t('landing.start')}
-            </button>
-
-            <button 
-              className="px-12 py-8 bg-white border border-slate-200 text-slate-900 rounded-[2.5rem] font-bold text-xl hover:bg-slate-50 shadow-sm active:translate-y-1 transition-all"
-            >
-              Learn More
-            </button>
+            {user ? (
+              <>
+                <button 
+                  onClick={handleLaunch}
+                  disabled={isLaunching}
+                  className={`btn-primary text-xl px-16 py-8 shadow-indigo-600/20 active:translate-y-1 transition-all ${isLaunching ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {isLaunching ? 'LIFT OFF! 🚀' : t('landing.start')}
+                </button>
+                <div className="flex items-center gap-4 px-8 py-4 bg-indigo-50 rounded-2xl border border-indigo-100 shadow-sm">
+                  <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
+                    {user.username[0].toUpperCase()}
+                  </div>
+                  <span className="font-bold text-slate-700">Explorer {user.username}</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <button 
+                  onClick={() => router.push('/login')}
+                  className="btn-primary text-xl px-12 py-8 shadow-indigo-600/20 active:translate-y-1 transition-all"
+                >
+                  Login 🔐
+                </button>
+                <button 
+                  onClick={() => router.push('/signup')}
+                  className="px-12 py-8 bg-white border-2 border-indigo-600 text-indigo-600 rounded-[2.5rem] font-bold text-xl hover:bg-indigo-50 shadow-sm shadow-indigo-100 active:translate-y-1 transition-all"
+                >
+                  Register 🦄
+                </button>
+              </>
+            )}
           </div>
+
         </motion.div>
       </section>
 
