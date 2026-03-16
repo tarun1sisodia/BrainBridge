@@ -1,12 +1,9 @@
-# BrainBridge
-
-## AI Bilingual Learning Disability Screening Platform
-
----
+# BrainBridge -  AI Bilingual Learning Disability Screening Platform
 
 # 1. Project Overview
 
-**BrainBridge** is a gamified AI-powered screening platform designed to detect early indicators of learning disabilities in children aged **4–8 years**.
+BrainBridge is a gamified AI-powered screening platform designed to detect early indicators of learning disabilities in children aged under 3-13.
+Disclaimer :- It is not diagnosis tool for medical advice only detects behavioural screening through patterns including response time, focus attention and other behavioural metrics.
 
 The system evaluates behavioral signals through short interactive games and applies machine learning models to estimate risk for:
 
@@ -19,23 +16,20 @@ BrainBridge is designed to be:
 * Accessible
 * Affordable
 * Multilingual
-* Deployable in schools and homes
+* Aims to  Deploy in schools promoting goverment initiative like DIKSHA/DISHA
 
-It provides **screening indicators**, not medical diagnoses.
-
----
-
+It provides screening indicators, not medical diagnoses.
 # 2. Problem Statement
 
 Learning disabilities are widespread yet underdiagnosed.
 
-### Key Statistics
+Key Statistics
 
-* Over **4.5 crore children in India** are estimated to have learning disabilities.
-* **90% remain undiagnosed until age 10+**.
-* Professional assessments cost **₹20,000–₹25,000**.
+* Over 4.5 crore children in India are estimated to have learning disabilities.
+* 90% remain undiagnosed until age 10+.
+* Professional assessments cost ₹20,000–₹25,000.
 
-### Key Challenges
+### Key Challenges BrainBridge aims to resolve
 
 1. Late detection of learning disorders
 2. Expensive clinical evaluations
@@ -43,13 +37,11 @@ Learning disabilities are widespread yet underdiagnosed.
 4. Language barriers in existing platforms
 5. Limited access to specialists
 
----
-
 # 3. Proposed Solution
 
-BrainBridge provides a **digital screening system** where children play simple games while the system measures cognitive behavior.
+BrainBridge provides a digital screening system where children play simple games while the system measures cognitive behavior.
 
-The system collects **20+ behavioral signals**, processes them using machine learning models, and generates a **risk report**.
+The system collects cognitive  behavioral signals, processes them using machine learning models, and generates a risk report.
 
 ### Key Characteristics
 
@@ -59,24 +51,21 @@ The system collects **20+ behavioral signals**, processes them using machine lea
 * AI-based screening
 * Parent-friendly reports
 
----
-
 # 4. Target Users
 
-### Primary Users
+#Primary Users
 
 * Children (4–8 years)
 * Parents
 * Teachers
 
-### Secondary Users
+# Secondary Users (v3-v6 Future Enhancement)
 
 * Schools
 * NGOs
 * Pediatric psychologists
 * Government programs
 
----
 
 # 5. Platform Features
 
@@ -99,7 +88,7 @@ Future expansion:
 * Punjabi
 * Odia
 
-### Localization System
+#Localization System
 
 * `en.json`
 * `hi.json`
@@ -110,23 +99,20 @@ Features:
 * bilingual audio instructions
 * persistent language settings
 
----
-
 # 6. Screening Game System
 
 Each screening session includes **five short games** lasting **60–90 seconds**.
 
 Total screening time:
 
-**7–10 minutes**
+7–10 minutes
 
----
 
 # 7. Screening Games
 
 ## 7.1 Letter Mirror Game
 
-Screens for **Dyslexia**.
+Screens for Dyslexia.
 
 Child identifies the correct letter among mirrored versions.
 
@@ -137,11 +123,9 @@ Signals collected:
 * response latency
 * correction attempts
 
----
-
 ## 7.2 Sound Pattern Game
 
-Screens for **phonological processing issues**.
+Screens for phonological processing issues.
 
 Child matches sounds with letters.
 
@@ -151,11 +135,9 @@ Signals collected:
 * auditory discrimination delay
 * sound mapping errors
 
----
+# 7.3 Number Jump Game
 
-## 7.3 Number Jump Game
-
-Screens for **Dyscalculia**.
+Screens for Dyscalculia.
 
 Child jumps to the correct number or quantity.
 
@@ -166,11 +148,9 @@ Signals collected:
 * quantity estimation
 * response delay
 
----
+# 7.4 Focus Catcher Game
 
-## 7.4 Focus Catcher Game
-
-Screens for **ADHD**.
+Screens for ADHD.
 
 Child catches targets while ignoring distractions.
 
@@ -181,11 +161,10 @@ Signals collected:
 * sustained attention
 * distraction reaction
 
----
 
 ## 7.5 Drawing Sequence Game
 
-Measures **working memory and executive function**.
+Measures working memory and executive function.
 
 Child repeats a sequence of drawing movements.
 
@@ -194,8 +173,6 @@ Signals collected:
 * memory accuracy
 * sequence completion
 * motor planning delay
-
----
 
 # 8. Behavioral Telemetry System
 
@@ -242,7 +219,6 @@ Parent Report
 | Dyslexia    | CNN / Random Forest |
 | Dyscalculia | XGBoost             |
 
----
 
 ## 9.3 Model Output
 
@@ -250,15 +226,13 @@ Models output probability scores.
 
 Example:
 
-```
 ADHD Risk = 0.71
 Dyslexia Risk = 0.32
 Dyscalculia Risk = 0.45
-```
+
 
 These are mapped to the **traffic light system**.
 
----
 
 # 10. Risk Classification
 
@@ -268,7 +242,6 @@ These are mapped to the **traffic light system**.
 | 0.3–0.6 | Yellow (Moderate Risk) |
 | 0.6–1   | Red (High Risk)        |
 
----
 
 # 11. Parent Report
 
@@ -285,7 +258,6 @@ Example sections:
 * reading skills
 * number understanding
 
----
 
 # 12. Teacher Dashboard
 
@@ -295,8 +267,6 @@ Teachers can view:
 * anonymized student profiles
 * early intervention suggestions
 
----
-
 # 13. Specialist Finder
 
 Parents can locate nearby:
@@ -304,8 +274,6 @@ Parents can locate nearby:
 * child psychologists
 * speech therapists
 * special educators
-
----
 
 # 14. System Architecture
 
@@ -319,10 +287,8 @@ Libraries:
 
 * TailwindCSS
 * Framer Motion
-* Zustand / Redux
+* Zustand
 * Phaser.js or Canvas API
-
----
 
 ## Backend
 
@@ -336,7 +302,6 @@ Responsibilities:
 * authentication
 * report generation
 
----
 
 ## ML Service
 
@@ -351,8 +316,6 @@ Responsibilities:
 * feature processing
 * prediction API
 * model loading
-
----
 
 ## Database
 
@@ -370,38 +333,31 @@ Cache:
 
 Redis
 
----
-
 # 15. Prediction API
 
 Example endpoint:
 
-```
 POST /predict
-```
 
 Input:
 
-```json
+json
 {
   "reaction_time": 1.2,
   "error_rate": 0.35,
   "attention_score": 0.61,
   "math_accuracy": 0.55
 }
-```
+
 
 Output:
 
-```json
+json
 {
   "adhd_risk": 0.71,
   "dyslexia_risk": 0.32,
   "dyscalculia_risk": 0.45
 }
-```
-
----
 
 # 16. Offline Support
 
@@ -416,11 +372,9 @@ Features:
 * local telemetry storage
 * automatic sync
 
----
-
 # 17. Privacy & Compliance
 
-BrainBridge follows **DPDP Act 2023**.
+BrainBridge follows *DPDP Act 2023*.
 
 Privacy measures:
 
@@ -429,18 +383,14 @@ Privacy measures:
 * encrypted communication
 * no third-party trackers
 
----
-
 # 18. Ethical Policy
 
-BrainBridge is a **screening tool**, not a diagnostic system.
+BrainBridge is a screening tool, not a diagnostic system.
 
 Reports always include:
 
 > “This platform provides early screening indicators.
 > It does not replace professional medical evaluation.”
-
----
 
 # 19. Development Roadmap
 
@@ -452,8 +402,6 @@ Frontend prototype.
 * game skeletons
 * telemetry capture
 
----
-
 ## Phase 2
 
 ML system integration.
@@ -461,8 +409,6 @@ ML system integration.
 * dataset cleaning
 * model training
 * prediction API
-
----
 
 ## Phase 3
 
@@ -472,8 +418,6 @@ Reporting system.
 * teacher dashboard
 * PDF export
 
----
-
 ## Phase 4
 
 Scaling features.
@@ -481,8 +425,6 @@ Scaling features.
 * specialist finder
 * mobile PWA
 * multi-language support
-
----
 
 # 20. Missing Components
 
@@ -508,8 +450,6 @@ Accuracy, recall, precision.
 
 Docker containers and cloud hosting.
 
----
-
 # 21. Performance Targets
 
 | Metric                 | Goal        |
@@ -518,11 +458,8 @@ Docker containers and cloud hosting.
 | Crash Free Sessions    | >98%        |
 | Average Screening Time | <10 minutes |
 
----
-
 # 22. Repository Structure
 
-```
 brainbridge/
 
 frontend/
@@ -531,9 +468,7 @@ backend/
 ml_service/
 datasets/
 docs/
-```
 
----
 
 # 23. Future Expansion
 
@@ -544,16 +479,13 @@ Possible future modules:
 * autism screening signals
 * adaptive learning recommendations
 
----
-
 # 24. License
 
 Educational and research use.
 
----
-
 # 25. Authors
 
 BrainBridge Development Team
-#   B r a i n B r i d g e  
+#   B r a i n B r i d g e 
+ 
  
