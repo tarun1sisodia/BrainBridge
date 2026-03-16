@@ -34,8 +34,9 @@ export default function ProfileCreation({ onCreate }: ProfileProps) {
       <motion.div 
         initial={{ opacity: 0, y: 30, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        className="bg-white/70 backdrop-blur-md w-full p-12 md:p-20 relative overflow-hidden shadow-2xl border border-white/80 rounded-[3rem]"
+        className="bg-white/70 backdrop-blur-md w-full p-8 md:p-12 relative overflow-hidden shadow-2xl border border-white/80 rounded-[2.5rem]"
       >
+
         <div className="relative z-10 flex flex-col items-center">
           <motion.div 
              animate={{ scale: [1, 1.05, 1] }}
@@ -46,11 +47,12 @@ export default function ProfileCreation({ onCreate }: ProfileProps) {
           </motion.div>
 
 
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-12 text-center tracking-tight uppercase">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 mb-8 text-center tracking-tight uppercase">
             Start Your Journey! 🌟
           </h2>
           
-          <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-12">
+          <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-8">
+
             {/* Avatar Selection */}
             <div className="w-full">
               <label className="block text-slate-600 font-bold text-xs uppercase tracking-widest mb-8 text-center">
@@ -89,20 +91,22 @@ export default function ProfileCreation({ onCreate }: ProfileProps) {
                   value={childId}
                   onChange={(e) => setChildId(e.target.value)}
                   placeholder="Type your name here..."
-                  className="w-full bg-slate-50 border-4 border-slate-100 rounded-[2rem] px-10 py-8 text-3xl focus:outline-none focus:border-indigo-400 focus:bg-white transition-all text-slate-800 placeholder-slate-400 font-bold"
+                  className="w-full bg-slate-50 border-4 border-slate-100 rounded-2xl px-8 py-5 text-xl focus:outline-none focus:border-indigo-400 focus:bg-white transition-all text-slate-800 placeholder-slate-400 font-bold"
 
                 />
               </div>
             </div>
+
             
             <motion.button 
               type="submit"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-8 text-3xl font-black group shadow-xl shadow-indigo-600/20 rounded-[2.5rem] uppercase tracking-widest"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-5 text-xl font-black group shadow-xl shadow-indigo-600/20 rounded-2xl uppercase tracking-widest"
             >
-              LET&apos;S PLAY! <span className="ml-4 animate-bounce-soft">🚀</span>
+              LET&apos;S PLAY! <span className="ml-2 animate-bounce-soft">🚀</span>
             </motion.button>
+
           </form>
         </div>
       </motion.div>
