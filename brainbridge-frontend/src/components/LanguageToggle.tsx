@@ -1,18 +1,21 @@
 'use client';
+import { motion } from 'framer-motion';
 import { useLanguageStore } from '../stores/languageStore';
 
 export default function LanguageToggle() {
   const { toggleLanguage, t } = useLanguageStore();
 
   return (
-    <button 
+    <motion.button 
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       onClick={toggleLanguage}
-      className="absolute top-8 right-8 z-50 glass-panel px-6 py-3 rounded-2xl font-black text-white hover:bg-white/20 transition-all duration-300 shadow-2xl flex items-center gap-3 hover:scale-110 active:scale-90 border-white/40 group"
+      className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full font-bold text-white border border-white/20 shadow-sm flex items-center gap-3 transition-all hover:bg-white/20"
     >
-      <span className="text-2xl group-hover:rotate-12 transition-transform">🌐</span>
-      <span className="tracking-tight uppercase text-sm">
-        {t('landing.language_toggle')}
+      <span className="text-xl">🌐</span>
+      <span className="tracking-widest uppercase text-[10px] font-black opacity-80">
+        {t('landing.language_toggle') || "EN | HI"}
       </span>
-    </button>
+    </motion.button>
   );
 }

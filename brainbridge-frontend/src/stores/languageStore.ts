@@ -17,10 +17,11 @@ export const useLanguageStore = create<LanguageState>((set, get) => ({
   language: 'en',
   t: (keyPath: string) => {
     const { language } = get();
-    const dictionary: any = translations[language];
+    const dictionary = translations[language] as Record<string, unknown>;
     
     // Simple dot notation parser (e.g., 'landing.title')
-    return keyPath.split('.').reduce((obj, key) => (obj && obj[key] ? obj[key] : keyPath), dictionary);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return keyPath.split('.').reduce((obj: any, key) => (obj && obj[key] ? obj[key] : keyPath), dictionary) as string;
   },
   setLanguage: (lang) => set({ language: lang }),
   toggleLanguage: () => set((state) => ({ language: state.language === 'en' ? 'hi' : 'en' }))

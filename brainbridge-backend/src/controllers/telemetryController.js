@@ -4,7 +4,7 @@ import { BadRequestError } from '../utils/customErrors.js';
 
 export const saveTelemetry = async (req, res, next) => {
   try {
-    const { session_id, game, reaction_time, errors, completion_time, additional_metrics } = req.body;
+    const { session_id, game, reaction_time, error_count, completion_time, additional_metrics } = req.body;
     
     if (!session_id || !game) {
       throw new BadRequestError('session_id and game are required');
@@ -14,7 +14,7 @@ export const saveTelemetry = async (req, res, next) => {
       session_id,
       game,
       reaction_time,
-      errors,
+      error_count,
       completion_time,
       additional_metrics
     });

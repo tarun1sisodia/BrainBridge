@@ -4,11 +4,11 @@ import { BadRequestError, NotFoundError } from '../utils/customErrors.js';
 
 export const createSession = async (req, res, next) => {
   try {
-    const { child_id, language } = req.body;
-    if (!child_id) {
-      throw new BadRequestError('child_id is required');
-    }
-    const session = await Session.create({ child_id, language });
+    const { language } = req.body;
+    const session = await Session.create({ 
+      user: req.user.id, 
+      language 
+    });
     return successResponse(res, session, 'Session created successfully', 201);
   } catch (error) {
     next(error);
@@ -18,9 +18,9 @@ export const createSession = async (req, res, next) => {
 export const getSession = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const session = await Session.findById(id);
+    const session = await Session.findOne({ _id: id, user: req.user.id });
     if (!session) {
-      throw new NotFoundError('Session not found');
+      throw new NotFoundError('Session not found or unauthorized');
     }
     return successResponse(res, session);
   } catch (error) {
@@ -32,9 +32,13 @@ export const updateSessionStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const session = await Session.findByIdAndUpdate(id, { status }, { new: true });
+    const session = await Session.findOneAndUpdate(
+      { _id: id, user: req.user.id }, 
+      { status }, 
+      { new: true }
+    );
     if (!session) {
-      throw new NotFoundError('Session not found');
+      throw new NotFoundError('Session not found or unauthorized');
     }
     return successResponse(res, session, 'Session status updated');
   } catch (error) {

@@ -1,51 +1,52 @@
 {
   "landing": {
-    "title": "Discover Your Superpowers!",
-    "subtitle": "Play Fun Games & Learn About Your Brain",
-    "start": "Start Screening",
-    "language_toggle": "हिंदी में बदलें",
-    "games_heading": "Games for You!"
+    "title": "Welcome to Your Brain Adventure! ✨",
+    "subtitle": "Discover your superpowers through fun games",
+    "start": "Let's Play!",
+    "language_toggle": "English | हिंदी",
+    "games_heading": "Choose Your Challenge!"
   },
   "consent": {
-    "title": "Parent Consent",
-    "text": "By continuing, you agree to allow BrainBridge to anonymously collect gameplay data to help screen for early learning indicators. This is not a medical diagnosis.",
-    "agree": "I Agree",
-    "disagree": "Cancel"
+    "title": "Parent's Permission",
+    "text": "By playing, you allow us to help you understand how you learn best! We keep your data safe and anonymous.",
+    "agree": "Start Adventure",
+    "disagree": "Go Back"
   },
   "shell": {
     "game": "Game",
-    "time_remaining": "Time Remaining",
+    "level": "Level",
+    "time_remaining": "Time Left",
     "seconds": "s",
     "pause": "Pause",
-    "resume": "Resume",
-    "exit": "Exit"
+    "resume": "Play",
+    "exit": "End Game"
   },
   "games": {
     "mirror": {
-      "title": "Dyslexia",
-      "subtitle": "(Reading)",
-      "instruction": "Tap the correct letter!"
+      "title": "Letter Quest",
+      "subtitle": "(Reading Powers)",
+      "instruction": "Find the matching magic letter!"
     },
     "jump": {
-      "title": "Dyscalculia",
-      "subtitle": "(Numbers)",
-      "instruction": "Jump to the right number!"
+      "title": "Number Island",
+      "subtitle": "(Math Powers)",
+      "instruction": "Jump to the correct number!"
     },
     "focus": {
-      "title": "ADHD",
-      "subtitle": "(Focus)",
-      "instruction": "Catch the stars, ignore the bugs!"
+      "title": "Cosmic Catcher",
+      "subtitle": "(Focus Powers)",
+      "instruction": "Catch butterflies, avoid the rocks!"
     }
   },
   "report": {
-    "title": "Screening Results",
-    "adhd_risk": "Attention Risk",
-    "dyslexia_risk": "Reading Risk",
-    "dyscalculia_risk": "Math Risk",
-    "low": "Low",
-    "moderate": "Moderate",
-    "high": "High",
-    "download_pdf": "Download PDF Report",
-    "disclaimer": "This platform provides early screening indicators only and does not replace professional medical evaluation."
+    "title": "Your Brain Map 🗺️",
+    "adhd_risk": "Focus Power",
+    "dyslexia_risk": "Reading Power",
+    "dyscalculia_risk": "Number Power",
+    "low": "Super Strong!",
+    "moderate": "Growing fast!",
+    "high": "Needs Practice",
+    "download_pdf": "Save My Brain Map",
+    "disclaimer": "This is a fun discovery tool, not a doctor's checkup. Let's learn together!"
   }
 }

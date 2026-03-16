@@ -8,10 +8,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "BrainBridge Toolkit",
-  description: "Early learning capability screening",
+  title: "BrainBridge | The Ultimate Learning Adventure",
+  description: "Unlock your potential through playful magic worlds!",
   manifest: '/manifest.json',
 };
+
+import { AuthProvider } from "@/stores/AuthContext";
 
 export default function RootLayout({
   children,
@@ -21,9 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full scroll-smooth">
       <body
-        className={`${outfit.variable} font-sans antialiased bg-slate-950 text-slate-50`}
+        className={`${outfit.variable} font-sans antialiased bg-background text-slate-900`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

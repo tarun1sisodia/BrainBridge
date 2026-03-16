@@ -12,6 +12,8 @@ export default function NumberJumpGame({ onGameComplete }: NumberJumpProps) {
   const [round, setRound] = useState(0);
   const [targetNumber, setTargetNumber] = useState(0);
   const [options, setOptions] = useState<number[]>([]);
+  const [shake, setShake] = useState(false);
+  const [jumping, setJumping] = useState(false);
   
   // Stats
   const [startTime, setStartTime] = useState(Date.now());
@@ -20,14 +22,13 @@ export default function NumberJumpGame({ onGameComplete }: NumberJumpProps) {
 
   useEffect(() => {
     if (round < ROUNDS) {
-      // Generate a simple math problem conceptually represented as jumping to the right number in a sequence
       const target = Math.floor(Math.random() * 8) + 3; // 3 to 10
       setTargetNumber(target);
       
       const incorrect1 = target + (Math.random() > 0.5 ? 1 : -1);
       const incorrect2 = target + (Math.random() > 0.5 ? 2 : -2);
       
-      const newOptions = [target, incorrect1, incorrect2 != incorrect1 ? incorrect2 : incorrect1 + 1];
+      const newOptions = [target, incorrect1, incorrect2 !== incorrect1 ? incorrect2 : incorrect1 + 1];
       setOptions(newOptions.sort(() => Math.random() - 0.5));
       setStartTime(Date.now());
     } else {
@@ -38,48 +39,121 @@ export default function NumberJumpGame({ onGameComplete }: NumberJumpProps) {
         math_response_latency: totalReactionTime / ROUNDS
       });
     }
-  }, [round]);
+  }, [round, onGameComplete]);
 
   const handleSelection = (selected: number) => {
     const reactionTime = (Date.now() - startTime) / 1000;
 
     if (selected === targetNumber) {
       setTotalReactionTime(prev => prev + reactionTime);
-      setRound(prev => prev + 1);
+      setJumping(true);
+      setTimeout(() => {
+        setJumping(false);
+        setRound(prev => prev + 1);
+      }, 1000);
     } else {
       setErrors(prev => prev + 1);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
     }
   };
 
   if (round >= ROUNDS) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
-      <h3 className="text-2xl font-bold text-slate-700 mb-2">Jump to the missing number or next in sequence</h3>
-      <div className="flex space-x-4 mb-10 text-4xl font-black text-indigo-600">
-        <span>{targetNumber - 2}</span>
-        <span>,</span>
-        <span>{targetNumber - 1}</span>
-        <span>,</span>
-        <span className="text-emerald-500 border-b-4 border-emerald-500 px-4">?</span>
+    <div className="flex flex-col items-center justify-center p-6 relative min-h-[600px] overflow-hidden">
+      {/* Animated Water Background (Enhanced) */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <motion.div 
+          className="absolute inset-x-0 bottom-0 h-1/2 bg-sky-400/20 backdrop-blur-sm"
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <svg className="w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+           <motion.path 
+             animate={{ d: [
+               "M0,450 Q200,420 400,450 T800,450 L800,600 L0,600 Z",
+               "M0,450 Q200,480 400,450 T800,450 L800,600 L0,600 Z",
+               "M0,450 Q200,420 400,450 T800,450 L800,600 L0,600 Z"
+             ]}}
+             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+             fill="#3a86ff"
+           />
+           <motion.circle cx="10%" cy="15%" r="50" fill="white" animate={{ x: [0, 40, 0], y: [0, 10, 0] }} transition={{ duration: 15, repeat: Infinity }} />
+           <motion.circle cx="85%" cy="25%" r="70" fill="white" animate={{ x: [0, -30, 0], y: [0, -15, 0] }} transition={{ duration: 20, repeat: Infinity }} />
+        </svg>
       </div>
-      
-      <div className="flex space-x-6">
+
+      <motion.div 
+        animate={{ x: shake ? [-10, 10, -10, 10, 0] : 0 }}
+        className="relative z-10 w-full flex flex-col items-center gap-12"
+      >
+        <div className="bg-white/10 backdrop-blur-md p-8 md:p-12 flex flex-col items-center border border-white/20 rounded-[3rem] shadow-xl max-w-2xl w-full">
+          <h3 className="text-3xl font-black text-white mb-8 uppercase tracking-tight text-center">
+             Jump across the Magic Islands! 🏝️
+          </h3>
+          <div className="flex items-center gap-6 p-8 bg-white/5 rounded-[2rem] border border-white/10">
+             <div className="flex flex-col items-center">
+                <span className="text-5xl font-black text-white opacity-40">{targetNumber - 2}</span>
+                <span className="text-[10px] font-bold text-white/30 mt-2 uppercase tracking-widest">Start</span>
+             </div>
+             <span className="text-3xl text-white/20">➜</span>
+             <div className="flex flex-col items-center">
+                <span className="text-5xl font-black text-white opacity-70">{targetNumber - 1}</span>
+                <span className="text-[10px] font-bold text-white/40 mt-2 uppercase tracking-widest">Next</span>
+             </div>
+             <span className="text-3xl text-white/20">➜</span>
+             <motion.div 
+               className="w-16 h-16 bg-gradient-to-br from-amber-400 to-rose-500 rounded-2xl flex items-center justify-center shadow-lg border border-white/20"
+               animate={{ scale: [1, 1.1, 1] }}
+               transition={{ repeat: Infinity, duration: 2 }}
+             >
+                <span className="text-3xl font-black text-white">?</span>
+             </motion.div>
+          </div>
+        </div>
+        
+        <div className="flex flex-wrap justify-center gap-8 max-w-3xl">
+          <AnimatePresence mode="popLayout">
+            {!jumping && options.map((option, idx) => (
+              <motion.button
+                key={`${round}-${idx}`}
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                whileHover={{ y: -10 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleSelection(option)}
+                className="relative group h-40 w-40"
+              >
+                <div className="absolute inset-4 bg-gradient-to-b from-emerald-400 to-indigo-600 border-4 border-white/40 rounded-full flex flex-col items-center justify-center shadow-xl group-hover:from-amber-400 transition-all">
+                   <span className="text-6xl font-black text-white">{option}</span>
+                </div>
+                <div className="absolute -top-2 -right-2 text-4xl">🌴</div>
+              </motion.button>
+            ))}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+
+        {/* Jumping Mascot Animation */}
         <AnimatePresence>
-          {options.map((option, idx) => (
-            <motion.button
-              key={`${round}-${idx}`}
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              whileHover={{ y: -10 }}
-              onClick={() => handleSelection(option)}
-              className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-400 to-indigo-500 text-white text-4xl font-extrabold shadow-lg hover:shadow-cyan-400/50 transition-all flex items-center justify-center"
+          {jumping && (
+            <motion.div 
+               initial={{ x: -200, y: 100, scale: 0.5, rotate: -45 }}
+               animate={{ 
+                 x: [0, 0], 
+                 y: [-250, 0],
+                 scale: [1, 1.2, 1],
+                 rotate: [0, 0]
+               }}
+               transition={{ duration: 1, ease: "easeOut" }}
+               className="absolute text-9xl z-50 pointer-events-none"
             >
-              {option}
-            </motion.button>
-          ))}
+              🐸
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
-    </div>
-  );
+    );
 }

@@ -2,9 +2,9 @@ import { create } from 'zustand';
 
 export interface TelemetryData {
   game: string;
-  reaction_time: number;
-  errors: number;
-  completion_time: number;
+  session_id?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 }
 
 interface TelemetryState {

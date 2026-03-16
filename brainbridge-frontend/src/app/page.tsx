@@ -1,11 +1,10 @@
 'use client';
 import { useState } from 'react';
 import axios from 'axios';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { useSessionStore } from '../stores/sessionStore';
 import { useTelemetryStore } from '../stores/telemetryStore';
-import { useLanguageStore } from '../stores/languageStore';
 
 import LanguageToggle from '../components/LanguageToggle';
 import Landing from '../components/Landing';
@@ -13,6 +12,7 @@ import Consent from '../components/Consent';
 import ProfileCreation from '../components/ProfileCreation';
 import GameShell from '../components/GameShell';
 import ReportCard from '../components/ReportCard';
+import InteractiveMascot from '../components/InteractiveMascot';
 
 import LetterMirrorGame from '../games/letterMirror/LetterMirrorGame';
 import NumberJumpGame from '../games/numberJump/NumberJumpGame';
@@ -22,12 +22,18 @@ type FlowState = 'landing' | 'consent' | 'profile' | 'playing' | 'loading_result
 
 const API_BASE_URL = 'http://localhost:5000/api'; // Node backend
 
+interface PredictionResults {
+  adhd_risk: number;
+  dyslexia_risk: number;
+  dyscalculia_risk: number;
+}
+
 export default function Home() {
   const [flow, setFlow] = useState<FlowState>('landing');
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<PredictionResults | null>(null);
   
   const { sessionId, setSession, currentGameIndex, nextGame, resetSession } = useSessionStore();
-  const { addTelemetry, clearTelemetry, data: telemetryData } = useTelemetryStore();
+  const { addTelemetry, clearTelemetry } = useTelemetryStore();
 
   const handleStart = () => setFlow('consent');
   const handleConsent = () => setFlow('profile');
@@ -35,7 +41,6 @@ export default function Home() {
   
   const handleProfileCreate = async (childId: string) => {
     try {
-      // 1. Create Session backend call
       const res = await axios.post(`${API_BASE_URL}/sessions`, { child_id: childId, language: 'en' });
       setSession(res.data._id, childId);
       setFlow('playing');
@@ -46,7 +51,7 @@ export default function Home() {
     }
   };
 
-  const submitTelemetry = async (gameName: string, stats: any) => {
+  const submitTelemetry = async (gameName: string, stats: Record<string, number | string>) => {
     const data = {
       session_id: sessionId,
       game: gameName,
@@ -68,11 +73,10 @@ export default function Home() {
     setFlow('loading_results');
     try {
       if (sessionId?.startsWith('local_')) {
-        // Mock result for offline mode
         setTimeout(() => {
           setResults({ adhd_risk: 0.2, dyslexia_risk: 0.1, dyscalculia_risk: 0.05 });
           setFlow('report');
-        }, 1500);
+        }, 2000);
         return;
       }
       
@@ -86,7 +90,7 @@ export default function Home() {
     }
   };
 
-  const handleGameComplete = (gameName: string, stats: any) => {
+  const handleGameComplete = (gameName: string, stats: Record<string, number | string>) => {
     submitTelemetry(gameName, stats);
     if (currentGameIndex < 2) {
       nextGame();
@@ -120,8 +124,6 @@ export default function Home() {
     }
   };
 
-  const { t } = useLanguageStore();
-
   const resetApp = () => {
     resetSession();
     clearTelemetry();
@@ -130,49 +132,137 @@ export default function Home() {
   };
 
   return (
-    <main className="w-full h-screen overflow-x-hidden relative bg-slate-50 font-sans">
-      <div className="relative z-10 w-full min-h-full flex flex-col">
-        {/* Header/Navbar */}
-        <header className="w-full max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg transform -rotate-12 transition-transform hover:rotate-0">
-               <span className="text-white text-xl font-bold">B</span>
+    <main className="w-full min-h-screen overflow-x-hidden relative bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
+      {/* Global Atmospheric Background (Adventure Theme) */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-5%] left-[-5%] w-[45%] h-[45%] bg-indigo-200/20 blur-[120px] rounded-full animate-blob" />
+        <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-rose-200/20 blur-[120px] rounded-full animate-blob [animation-delay:3s]" />
+        <div className="absolute top-[20%] right-[10%] w-[35%] h-[35%] bg-amber-200/15 blur-[100px] rounded-full animate-blob [animation-delay:6s]" />
+        
+        {/* Magic Floating Elements */}
+        <motion.div 
+           animate={{ rotate: 360, y: [0, -20, 0] }}
+           transition={{ rotate: { duration: 40, repeat: Infinity, ease: "linear" }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
+           className="absolute top-[15%] right-[15%] text-6xl opacity-20 floating-icon"
+        >
+          ✨
+        </motion.div>
+        <motion.div 
+           animate={{ y: [0, 30, 0], x: [0, 10, 0] }}
+           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+           className="absolute bottom-[25%] left-[10%] text-7xl opacity-20 floating-icon"
+        >
+          🚀
+        </motion.div>
+         <motion.div 
+           animate={{ scale: [1, 1.1, 1] }}
+           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+           className="absolute top-[40%] left-[5%] text-5xl opacity-15"
+        >
+          🎨
+        </motion.div>
+      </div>
+
+      <div className="relative z-10 w-full min-h-screen flex flex-col">
+        {/* Sleek Navigation */}
+        <header className="w-full max-w-7xl mx-auto px-6 py-8 md:py-10 flex justify-between items-center bg-white/30 backdrop-blur-md rounded-b-[2.5rem] mt-0 shadow-sm border-b border-white/40">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="flex items-center gap-4 cursor-pointer group" 
+            onClick={resetApp}
+          >
+            <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20 transform rotate-3 transition-transform group-hover:rotate-0">
+               <span className="text-white text-2xl font-black">B</span>
             </div>
-            <h1 className="text-2xl font-black text-primary tracking-tight">BrainBridge</h1>
-          </div>
-          <div className="flex gap-4">
+            <div className="flex flex-col">
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none group-hover:text-indigo-600 transition-colors">BrainBridge</h1>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mt-1">Adventure Mode</span>
+            </div>
+          </motion.div>
+
+          <div className="flex items-center gap-6">
             <LanguageToggle />
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="hidden md:flex px-8 py-3 bg-slate-900 text-white rounded-full font-bold text-xs uppercase tracking-widest shadow-lg hover:shadow-indigo-500/10 transition-all border border-slate-800"
+            >
+               Login
+            </motion.button>
           </div>
         </header>
 
-        <div className="flex-1 flex flex-col items-center p-4">
+        <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-10">
           <AnimatePresence mode="wait">
             {flow === 'landing' && <Landing key="landing" onStart={handleStart} />}
             {flow === 'consent' && <Consent key="consent" onConfirm={handleConsent} onCancel={handleCancel} />}
             {flow === 'profile' && <ProfileCreation key="profile" onCreate={handleProfileCreate} />}
             {flow === 'playing' && (
-              <div key="playing" className="w-full h-full max-w-lg mx-auto py-8">
+              <motion.div 
+                key="playing" 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                className="w-full max-w-7xl mx-auto"
+              >
                 {renderGame()}
-              </div>
+              </motion.div>
             )}
             {flow === 'loading_results' && (
-              <div key="loading" className="flex flex-col items-center justify-center py-20">
-                <div className="w-20 h-20 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-6 shadow-2xl" />
-                <h2 className="text-3xl font-black text-slate-800">Analyzing Screening Results...</h2>
-                <p className="text-slate-500 mt-2 font-medium">Generating personalized report...</p>
-              </div>
+              <motion.div 
+                key="loading" 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center glass-panel p-16 md:p-24 border-white/80 max-w-3xl shadow-2xl relative overflow-hidden"
+              >
+                {/* Decorative particles */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                  <motion.div animate={{ y: [-10, 10, -10] }} transition={{ repeat: Infinity, duration: 4 }} className="absolute top-10 left-10 text-4xl opacity-20">⭐</motion.div>
+                  <motion.div animate={{ y: [10, -10, 10] }} transition={{ repeat: Infinity, duration: 5 }} className="absolute bottom-10 right-10 text-4xl opacity-20">💎</motion.div>
+                </div>
+
+                <div className="relative w-40 h-40 mb-12">
+                   <div className="absolute inset-0 border-8 border-indigo-100 rounded-full" />
+                   <motion.div 
+                     animate={{ rotate: 360 }}
+                     transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                     className="absolute inset-0 border-8 border-indigo-600 border-t-transparent rounded-full" 
+                   />
+                   <div className="absolute inset-0 flex items-center justify-center">
+                     <div className="scale-125">
+                       <InteractiveMascot />
+                     </div>
+                   </div>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 text-center">Magical Report Pending...</h2>
+                <p className="text-slate-500 text-lg font-medium text-center max-w-sm leading-relaxed">Gathering your achievements from the adventure worlds!</p>
+              </motion.div>
             )}
             {flow === 'report' && results && (
-              <div key="report" className="w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar px-2 rounded-3xl">
+              <motion.div 
+                key="report" 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-7xl"
+              >
                 <ReportCard results={results} onRestart={resetApp} />
-              </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Footer */}
-        <footer className="w-full py-8 text-center text-slate-400 font-bold tracking-widest text-xs">
-          BRAINBRIDGE | PWA | (C) 2024
+        {/* Global Footer */}
+        <footer className="w-full py-12 px-6 max-w-7xl mx-auto border-t border-slate-200 mt-12 mb-10">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-3 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
+               <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-black text-xs">B</div>
+               <span className="font-bold text-slate-900 uppercase tracking-widest text-xs">BrainBridge Adventure v3.0</span>
+            </div>
+            
+            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-6 md:mt-0">
+              © 2024 BrainBridge Team
+            </p>
+          </div>
         </footer>
       </div>
     </main>

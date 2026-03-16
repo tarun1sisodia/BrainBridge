@@ -1,16 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useLanguageStore } from '../stores/languageStore';
+import { motion } from 'framer-motion';
 
 interface TimerProps {
-  duration: number; // in seconds
+  duration: number;
   onTimeUp: () => void;
   isRunning: boolean;
 }
 
 export default function Timer({ duration, onTimeUp, isRunning }: TimerProps) {
   const [timeLeft, setTimeLeft] = useState(duration);
-  const { t } = useLanguageStore();
 
   useEffect(() => {
     setTimeLeft(duration);
@@ -19,10 +18,10 @@ export default function Timer({ duration, onTimeUp, isRunning }: TimerProps) {
   useEffect(() => {
     if (!isRunning || timeLeft <= 0) return;
 
-    const timerId = setInterval(() => {
-      setTimeLeft(prev => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
-          clearInterval(timerId);
+          clearInterval(timer);
           onTimeUp();
           return 0;
         }
@@ -30,41 +29,44 @@ export default function Timer({ duration, onTimeUp, isRunning }: TimerProps) {
       });
     }, 1000);
 
-    return () => clearInterval(timerId);
+    return () => clearInterval(timer);
   }, [isRunning, timeLeft, onTimeUp]);
 
-  const percentage = (timeLeft / duration) * 100;
+  const isLow = timeLeft <= 10;
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative w-20 h-20">
-        <svg className="w-full h-full transform -rotate-90">
-          <circle
+      <motion.div 
+        className={`relative w-20 h-20 rounded-full border-4 flex items-center justify-center bg-white/5 backdrop-blur-sm transition-colors duration-500
+          ${isLow ? 'border-rose-500 bg-rose-500/10' : 'border-white/20 bg-white/5'}
+        `}
+        animate={{ scale: isLow ? [1, 1.05, 1] : 1 }}
+        transition={{ repeat: Infinity, duration: 1.5 }}
+      >
+        <div className="flex flex-col items-center leading-none">
+          <span className={`text-2xl font-black ${isLow ? 'text-rose-500' : 'text-white'}`}>
+            {timeLeft}
+          </span>
+          <span className="text-[8px] font-bold uppercase text-white/40 tracking-widest mt-1">Sec</span>
+        </div>
+        
+        {/* Animated Rings */}
+        <svg className="absolute inset-0 w-full h-full -rotate-90">
+          <motion.circle
             cx="40"
             cy="40"
             r="36"
-            stroke="currentColor"
-            strokeWidth="8"
             fill="transparent"
-            className="text-gray-200"
-          />
-          <circle
-            cx="40"
-            cy="40"
-            r="36"
-            stroke="currentColor"
-            strokeWidth="8"
-            fill="transparent"
-            strokeDasharray={2 * Math.PI * 36}
-            strokeDashoffset={2 * Math.PI * 36 * ((100 - percentage) / 100)}
-            className={`transition-all duration-1000 linear ${timeLeft <= 10 ? 'text-red-500' : 'text-indigo-500'}`}
+            stroke={isLow ? '#f43f5e' : '#6366f1'}
+            strokeWidth="4"
+            strokeDasharray="226.2"
+            initial={{ strokeDashoffset: 226.2 }}
+            animate={{ strokeDashoffset: 226.2 * (1 - timeLeft / duration) }}
+            transition={{ duration: 1, ease: "linear" }}
+            strokeLinecap="round"
           />
         </svg>
-        <div className="absolute inset-0 flex items-center justify-center font-bold text-2xl text-gray-800">
-          {timeLeft}
-        </div>
-      </div>
-      <span className="text-sm font-medium text-gray-500 mt-2">{t('shell.time_remaining')}</span>
+      </motion.div>
     </div>
   );
 }

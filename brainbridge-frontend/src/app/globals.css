@@ -3,16 +3,62 @@
 @tailwind utilities;
 
 :root {
-  --background: #F8FAFC;
-  --foreground: #1E293B;
-  --primary: #2F80ED;
-  --secondary: #FF8C00;
-  --accent: #F2C94C;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  --primary: #4f46e5;
+  --primary-glow: rgba(79, 70, 229, 0.4);
+  
+  --secondary: #f43f5e;
+  --secondary-glow: rgba(244, 63, 94, 0.4);
+  
+  --accent-amber: #fbbf24;
+  --accent-emerald: #10b981;
+  --accent-sky: #38bdf8;
+  --accent-violet: #8b5cf6;
+}
+
+@layer base {
+  body {
+    @apply text-slate-900 antialiased overflow-x-hidden font-medium selection:bg-indigo-100 selection:text-indigo-900;
+    background-color: var(--background);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(56, 189, 248, 0.05) 0px, transparent 50%);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-black tracking-tight leading-tight;
+  }
 }
 
 @layer components {
-  .btn-playful {
-    @apply shadow-[0_8px_0_0_#CC7000] active:translate-y-1 active:shadow-[0_4px_0_0_#CC7000] transition-all duration-150;
+  /* Ultra-Modern Glassmorphism */
+  .glass-panel {
+    @apply bg-white/70 backdrop-blur-md border border-white/80 shadow-soft rounded-[3rem];
+  }
+  
+  .glass-card {
+    @apply bg-white/40 backdrop-blur-sm border border-white/60 shadow-md rounded-[2.5rem] 
+           hover:bg-white/80 transition-all duration-500 hover:scale-[1.01] hover:shadow-glow-indigo;
+  }
+
+  /* Premium Playful Buttons */
+  .creative-btn {
+    @apply relative px-10 py-5 rounded-[2.5rem] font-bold text-white transition-all duration-300
+           hover:scale-105 active:scale-95 shadow-playful hover:shadow-playful-hover
+           uppercase tracking-widest text-sm overflow-hidden flex items-center justify-center gap-3;
+  }
+
+  .btn-primary { @apply bg-kids-indigo hover:bg-kids-indigo-dark creative-btn shadow-glow-indigo; }
+  .btn-secondary { @apply bg-kids-rose hover:bg-kids-rose-dark creative-btn shadow-glow-rose; }
+  .btn-amber { @apply bg-kids-amber hover:bg-kids-amber-dark creative-btn shadow-glow-amber; }
+  
+  /* Decorative Blobs */
+  .bg-blob {
+    @apply absolute blur-[120px] rounded-full opacity-40 pointer-events-none;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
@@ -20,10 +66,60 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-slate-100 rounded-full;
+    @apply bg-slate-100;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full border-4 border-slate-100;
+    @apply bg-indigo-200 rounded-full hover:bg-indigo-300 border-2 border-transparent bg-clip-padding transition-colors;
+  }
+}
+
+@layer utilities {
+  .text-glow-indigo {
+    text-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
+  }
+  
+  .gradient-text-adventure {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-violet-500 to-rose-500;
+  }
+
+  .gradient-bg-main {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  .floating-icon {
+    @apply animate-float-slow drop-shadow-xl;
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+  
+  .animate-blob, .animate-float, .animate-bounce-soft, .animate-wiggle, .animate-spin-slow, .animate-pulse-soft, .animate-sparkle {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Accessibility: High Contrast Focus States */
+@layer base {
+  :focus-visible {
+    @apply outline-none ring-4 ring-kids-indigo ring-offset-4 ring-offset-background;
+  }
+}
+
+/* Touch Targets for Mobile */
+@media (max-width: 640px) {
+  .creative-btn, button {
+    @apply min-h-[56px] min-w-[56px];
   }
 }
